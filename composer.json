@@ -1,0 +1,30 @@
+{
+    "name": "onsecurity/kafkavel",
+    "type": "library",
+    "require": {
+        "mateusjunges/laravel-kafka": "^1.4",
+        "laravel/framework": "^6.0|^7.0|^8.0"
+    },
+    "license": "GNU GPLv3",
+    "autoload": {
+        "psr-4": {
+            "OnSecurity\\Kafkavel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "OnSecurity\\Kafkavel\\Test\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Tom Lindley",
+            "email": "tom.lindley@onsecurity.io"
+        }
+    ],
+    "require-dev": {
+        "mockery/mockery": "^1.4",
+        "phpunit/phpunit": "~9.5",
+        "orchestra/testbench": "^6|^7|^8"
+    }
+}
