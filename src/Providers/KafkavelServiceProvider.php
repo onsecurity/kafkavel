@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use OnSecurity\Kafkavel\Resources\Discovery\ProducerDiscover;
 use OnSecurity\Kafkavel\Resources\Producers\ProducerEventHandler;
-use OnSecurity\Kafkavel\Test\Support\TestProducerEvent;
+use OnSecurity\Kafkavel\Tests\Support\TestProducerEvent;
 
 class KafkavelServiceProvider extends ServiceProvider
 {

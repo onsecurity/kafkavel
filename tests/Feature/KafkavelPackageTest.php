@@ -1,13 +1,13 @@
 <?php
 
-namespace OnSecurity\Kafkavel\Test\Feature;
+namespace OnSecurity\Kafkavel\Tests\Feature;
 
 use Junges\Kafka\Facades\Kafka;
 use Junges\Kafka\Message\Message;
 use OnSecurity\Kafkavel\Resources\Producers\ProducerEventHandler;
-use OnSecurity\Kafkavel\Test\Support\TestProducer;
-use OnSecurity\Kafkavel\Test\Support\TestProducerEvent;
-use OnSecurity\Kafkavel\Test\TestCase;
+use OnSecurity\Kafkavel\Tests\Support\TestProducer;
+use OnSecurity\Kafkavel\Tests\Support\TestProducerEvent;
+use OnSecurity\Kafkavel\Tests\TestCase;
 
 class KafkavelPackageTest extends TestCase
 {

@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Resources\KafkavelPackage;
 
-use OnSecurity\Kafkavel\Test\Support\TestProducer;
-use OnSecurity\Kafkavel\Test\Support\TestProducerEvent;
+use OnSecurity\Kafkavel\Tests\Support\TestProducer;
+use OnSecurity\Kafkavel\Tests\Support\TestProducerEvent;
 use PHPUnit\Framework\TestCase;
 
 class ProducerTest extends TestCase

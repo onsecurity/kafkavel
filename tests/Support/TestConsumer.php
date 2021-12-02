@@ -1,6 +1,6 @@
 <?php
 
-namespace OnSecurity\Kafkavel\Test\Support;
+namespace OnSecurity\Kafkavel\Tests\Support;
 
 use Junges\Kafka\Contracts\KafkaConsumerMessage;
 use OnSecurity\Kafkavel\Resources\Contracts\KafkavelConsumer;

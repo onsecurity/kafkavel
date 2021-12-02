@@ -1,14 +1,14 @@
 <?php
 
-namespace OnSecurity\Kafkavel\Test\Feature;
+namespace OnSecurity\Kafkavel\Tests\Feature;
 
 use OnSecurity\Kafkavel\Resources\Discovery\ConsumerDiscover;
 use OnSecurity\Kafkavel\Resources\Discovery\ProducerDiscover;
-use OnSecurity\Kafkavel\Test\Support\TestConsumer;
-use OnSecurity\Kafkavel\Test\Support\TestConsumer2;
-use OnSecurity\Kafkavel\Test\Support\TestProducer;
-use OnSecurity\Kafkavel\Test\Support\TestProducer2;
-use OnSecurity\Kafkavel\Test\TestCase;
+use OnSecurity\Kafkavel\Tests\Support\TestConsumer;
+use OnSecurity\Kafkavel\Tests\Support\TestConsumer2;
+use OnSecurity\Kafkavel\Tests\Support\TestProducer;
+use OnSecurity\Kafkavel\Tests\Support\TestProducer2;
+use OnSecurity\Kafkavel\Tests\TestCase;
 
 class KafkavelDiscoverTest extends TestCase
 {

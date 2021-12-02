@@ -1,17 +1,17 @@
 <?php
 
-namespace OnSecurity\Kafkavel\Test\Feature;
+namespace OnSecurity\Kafkavel\Tests\Feature;
 
 use Junges\Kafka\Message\ConsumedMessage;
 use Mockery\MockInterface;
 use OnSecurity\Kafkavel\Resources\Consumers\ConsumeManager;
 use OnSecurity\Kafkavel\Resources\Consumers\ConsumerMap;
 use Orchestra\Testbench\TestCase;
-use OnSecurity\Kafkavel\Test\Support\TestConsumeManager;
-use OnSecurity\Kafkavel\Test\Support\TestConsumer;
-use OnSecurity\Kafkavel\Test\Support\TestConsumer2;
-use OnSecurity\Kafkavel\Test\Support\TestProducer;
-use OnSecurity\Kafkavel\Test\Support\TestProducer2;
+use OnSecurity\Kafkavel\Tests\Support\TestConsumeManager;
+use OnSecurity\Kafkavel\Tests\Support\TestConsumer;
+use OnSecurity\Kafkavel\Tests\Support\TestConsumer2;
+use OnSecurity\Kafkavel\Tests\Support\TestProducer;
+use OnSecurity\Kafkavel\Tests\Support\TestProducer2;
 
 class KafkavelConsumeManagerTest extends TestCase
 {

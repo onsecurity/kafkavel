@@ -13,7 +13,14 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "OnSecurity\\Kafkavel\\Test\\": "tests/"
+            "OnSecurity\\Kafkavel\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OnSecurity\\Kafkavel\\Providers\\KafkavelServiceProvider"
+            ]
         }
     },
     "authors": [

@@ -3,8 +3,8 @@
 namespace Tests\Unit\Resources\KafkavelPackage;
 
 use OnSecurity\Kafkavel\Resources\Consumers\ConsumerMap;
-use OnSecurity\Kafkavel\Test\Support\TestConsumer;
-use OnSecurity\Kafkavel\Test\Support\TestConsumer2;
+use OnSecurity\Kafkavel\Tests\Support\TestConsumer;
+use OnSecurity\Kafkavel\Tests\Support\TestConsumer2;
 use Orchestra\Testbench\TestCase;
 
 class ConsumerMapTest extends TestCase

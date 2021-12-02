@@ -1,6 +1,6 @@
 <?php
 
-namespace OnSecurity\Kafkavel\Test\Support;
+namespace OnSecurity\Kafkavel\Tests\Support;
 
 class TestConsumer2 extends TestConsumer
 {

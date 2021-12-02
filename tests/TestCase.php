@@ -1,6 +1,6 @@
 <?php
 
-namespace OnSecurity\Kafkavel\Test;
+namespace OnSecurity\Kafkavel\Tests;
 
 use Illuminate\Support\Facades\File;
 use OnSecurity\Kafkavel\Providers\KafkavelServiceProvider;
