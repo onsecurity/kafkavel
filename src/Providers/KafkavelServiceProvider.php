@@ -16,6 +16,10 @@ class KafkavelServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        $this->mergeConfigFrom(
+            __DIR__ . '/../../config/config.php' , 'kafkavel'
+        );
+
         $this->publishes([__DIR__ . '/../../config/config.php' => config_path('kafkavel.php')], 'laravel-kafkavel');
 
         foreach (ProducerDiscover::discoverEventClasses() as $eventName) {
