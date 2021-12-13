@@ -1,10 +1,9 @@
 <?php
 
-namespace OnSecurity\Kafkavel\Tests\Support;
+namespace OnSecurity\Kafkavel\Resources\Consumers;
 
 use Closure;
 use Junges\Kafka\Contracts\KafkaConsumerMessage;
-use OnSecurity\Kafkavel\Resources\Consumers\ConsumeManager;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 class TestConsumeManager extends ConsumeManager

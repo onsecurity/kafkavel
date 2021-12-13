@@ -11,13 +11,19 @@ use Junges\Kafka\Facades\Kafka;
 class ConsumeManager
 {
     protected KafkaConsumer $consumer;
-    
+
     protected Collection $consumerClasses;
     protected ConsumerMap $consumerMap;
+    protected ?Closure $beforeHandle = null;
+    protected ?Closure $afterHandle = null;
+    protected array $topics;
+    protected int $handledMessages = 0;
+    protected int $ignoredMessages = 0;
 
     public function __construct()
     {
         $this->consumerMap = new ConsumerMap;
+        $this->topics = $this->consumerMap->getTopics()->toArray();
         $this->createConsumer();
     }
 
@@ -31,9 +37,36 @@ class ConsumeManager
         $this->consumer->stopConsume($onStop);
     }
 
+    public function getTopics(): array
+    {
+        return $this->topics;
+    }
+
+    public function getHandledMessages(): int
+    {
+        return $this->handledMessages;
+    }
+
+    public function getIgnoredMessages(): int
+    {
+        return $this->getIgnoredMessages();
+    }
+
+    public function beforeHandle(?Closure $closure): self
+    {
+        $this->beforeHandle = $closure;
+        return $this;
+    }
+
+    public function afterHandle(?Closure $closure): self
+    {
+        $this->beforeHandle = $closure;
+        return $this;
+    }
+
     protected function createConsumer()
     {
-        $this->consumer = Kafka::createConsumer($this->consumerMap->getTopics()->toArray())
+        $this->consumer = Kafka::createConsumer($this->topics)
             ->withConsumerGroupId(config('kafka.consumer_group_id'))
             ->withHandler(fn(KafkaConsumerMessage $message) => $this->handleMessage($message))
             ->build();
@@ -43,10 +76,19 @@ class ConsumeManager
     {
         $consumerMessage = ConsumerMessage::makeFromKafkaConsumerMessage($message);
         $handlerClasses = $this->consumerMap->getTopicSchemaMap()[$message->getTopicName()][$consumerMessage->getSchema()][$consumerMessage->getSchemaVersion()] ?? [];
+
         $results = [];
-        foreach ($handlerClasses as $handlerClass) {
-            $handler = new $handlerClass($consumerMessage);
-            $results[$handlerClass] = $handler->handle();
+        if (!empty($handlerClasses) && ($this->beforeHandle === null || Closure::fromCallable($this->beforeHandle)($consumerMessage, $handlerClasses))) {
+            foreach ($handlerClasses as $handlerClass) {
+                $handler = new $handlerClass($consumerMessage);
+                $results[$handlerClass] = $handler->handle();
+            }
+            if ($this->afterHandle !== null) {
+                Closure::fromCallable($this->afterHandle)($consumerMessage, $handlerClasses, $results);
+            }
+            $this->handledMessages++;
+        } else {
+            $this->ignoredMessages++;
         }
         return $results;
     }

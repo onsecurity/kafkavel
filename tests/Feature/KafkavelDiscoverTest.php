@@ -28,7 +28,7 @@ class KafkavelDiscoverTest extends TestCase
     {
         config([
             'kafkavel.producer_discovery.enabled' => true,
-            'kafkavel.producer_discovery.directories' => ['OnSecurity/Kafkavel/Test/Support'],
+            'kafkavel.producer_discovery.directories' => ['OnSecurity/Kafkavel/Tests/Support'],
             'kafkavel.producers' => [],
         ]);
         $producers = ProducerDiscover::discover()->toArray();
@@ -42,7 +42,7 @@ class KafkavelDiscoverTest extends TestCase
     {
         config([
             'kafkavel.producer_discovery.enabled' => true,
-            'kafkavel.producer_discovery.directories' => ['OnSecurity/Kafkavel/Test/Support'],
+            'kafkavel.producer_discovery.directories' => ['OnSecurity/Kafkavel/Tests/Support'],
             'kafkavel.producers' => [TestProducer::class],
         ]);
         $producers = ProducerDiscover::discover()->toArray();
@@ -67,7 +67,7 @@ class KafkavelDiscoverTest extends TestCase
     {
         config([
             'kafkavel.consumer_discovery.enabled' => true,
-            'kafkavel.consumer_discovery.directories' => ['OnSecurity/Kafkavel/Test/Support'],
+            'kafkavel.consumer_discovery.directories' => ['OnSecurity/Kafkavel/Tests/Support'],
             'kafkavel.consumers' => [],
         ]);
         $consumers = ConsumerDiscover::discover()->toArray();
@@ -81,7 +81,7 @@ class KafkavelDiscoverTest extends TestCase
     {
         config([
             'kafkavel.consumer_discovery.enabled' => true,
-            'kafkavel.consumer_discovery.directories' => ['OnSecurity/Kafkavel/Test/Support'],
+            'kafkavel.consumer_discovery.directories' => ['OnSecurity/Kafkavel/Tests/Support'],
             'kafkavel.consumers' => [TestConsumer::class],
         ]);
         $consumers = ConsumerDiscover::discover()->toArray();

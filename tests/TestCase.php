@@ -11,7 +11,7 @@ abstract class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        File::copyDirectory(realpath(__DIR__ . '/Support'), base_path('OnSecurity/Kafkavel/Test/Support'));
+        File::copyDirectory(realpath(__DIR__ . '/Support'), base_path('OnSecurity/Kafkavel/Tests/Support'));
     }
     
     public function getEnvironmentSetUp($app)
