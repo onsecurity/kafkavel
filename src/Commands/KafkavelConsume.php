@@ -15,7 +15,7 @@ class KafkavelConsume extends Command
      *
      * @var string
      */
-    protected $signature = 'kafkavel:consume {--D|debug}';
+    protected $signature = 'kafkavel:consume {--D|debug} {--T|topic=*}';
 
     /**
      * The console command description.
@@ -63,7 +63,8 @@ class KafkavelConsume extends Command
     private function startConsumer(): void
     {
         try {
-            $this->consumeManager = new ConsumeManager;
+            $topicFilter = $this->option('topic');
+            $this->consumeManager = new ConsumeManager(empty($topicFilter) ? null : $topicFilter);
             if ($this->debug) {
                 $this->info('Subscribing to topics: ' . implode(', ', $this->consumeManager->getTopics()));
             }
@@ -106,18 +107,18 @@ class KafkavelConsume extends Command
         $this->info('Consume Manager gracefully shutting down...');
         if ($this->consumeManager !== null) {
             $this->consumeManager->stop();
+
+            $handledMessages = $this->consumeManager->getHandledMessages();
+            $ignoredMessages = $this->consumeManager->getIgnoredMessages();
+            $totalMessages = $handledMessages + $ignoredMessages;
+            $handledPercentage = $totalMessages === 0 ? 100 : round(($handledMessages / $totalMessages) * 100, 2);
+
+            $this->comment(sprintf('Handled %d Ignored %d Handled Percentage %d%%',
+                $handledMessages,
+                $ignoredMessages,
+                $handledPercentage
+            ));
         }
-
-        $handledMessages = $this->consumeManager->getHandledMessages();
-        $ignoredMessages = $this->consumeManager->getIgnoredMessages();
-        $totalMessages = $handledMessages + $ignoredMessages;
-        $handledPercentage = $totalMessages === 0 ? 100 : round(($handledMessages / $totalMessages) * 100, 2);
-
-        $this->comment(sprintf('Handled %d Ignored %d Handled Percentage %d%%',
-            $handledMessages,
-            $ignoredMessages,
-            $handledPercentage
-        ));
 
         $this->info('Consume Manager Shutdown');
         exit(0);
