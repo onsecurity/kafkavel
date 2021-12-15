@@ -20,10 +20,13 @@ class ConsumeManager
     protected int $handledMessages = 0;
     protected int $ignoredMessages = 0;
 
-    public function __construct()
+    public function __construct(?array $topicFilter = null)
     {
         $this->consumerMap = new ConsumerMap;
-        $this->topics = $this->consumerMap->getTopics()->toArray();
+        $this->topics = $this->consumerMap->getTopics()->filter(fn($topic) => $topicFilter === null || in_array($topic, $topicFilter, true))->toArray();
+        if (empty($this->topics)) {
+            throw new \Exception('Unable to create ' . static::class . ' no valid topics');
+        }
         $this->createConsumer();
     }
 
@@ -49,7 +52,7 @@ class ConsumeManager
 
     public function getIgnoredMessages(): int
     {
-        return $this->getIgnoredMessages();
+        return $this->ignoredMessages;
     }
 
     public function beforeHandle(?Closure $closure): self
