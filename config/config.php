@@ -17,7 +17,7 @@ return [
     ],
 
     // when producing messages, a job is pushed onto a queue, this config options defines the queue that is used
-    'producer_queue' => env('KAFKAVEL_QUEUE_DRIVER', env('QUEUE_DRIVER', 'sync')),
+    'producer_queue' => env('KAFKAVEL_QUEUE', env('QUEUE_DRIVER', 'sync')),
 
     // consumers are classes that implement \OnSecurity\Kafkavel\Resources\Contracts\KafkavelConsumers.
     // They can be manually defined here or auto-discovery can be used by setting consumer_discovery.enabled to true below
