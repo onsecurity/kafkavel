@@ -28,7 +28,7 @@ abstract class Producer implements KafkavelProducer
 
     final public function produce(): void
     {
-        dispatch(new KafkaProduce(static::getTopic(), $this->getMessage()));
+        dispatch(new KafkaProduce(static::getTopic(), $this->getMessage()))->onQueue(config('kafkavel.producer_queue'));
     }
 
     public function getMessage() {
