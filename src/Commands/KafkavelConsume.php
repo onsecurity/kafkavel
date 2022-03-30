@@ -2,9 +2,11 @@
 
 namespace OnSecurity\Kafkavel\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Junges\Kafka\Exceptions\KafkaConsumerException;
+use OnSecurity\Kafkavel\Exceptions\ConsumerManagerStartException;
 use OnSecurity\Kafkavel\Resources\Consumers\ConsumeManager;
 use OnSecurity\Kafkavel\Resources\Consumers\ConsumerMessage;
 
@@ -57,10 +59,10 @@ class KafkavelConsume extends Command
 
         $this->info('Consume Manager Starting');
 
-        $this->startConsumer();
+        return $this->startConsumer();
     }
 
-    private function startConsumer(): void
+    private function startConsumer(): int
     {
         try {
             $topicFilter = $this->option('topic');
@@ -69,11 +71,16 @@ class KafkavelConsume extends Command
                 $this->info('Subscribing to topics: ' . implode(', ', $this->consumeManager->getTopics()));
             }
             $this->consumeManager->start();
+            return 0;
+        } catch (ConsumerManagerStartException $e) {
+            $this->error('Failed to start Consume Manager: ' . $e->getMessage());
+            return 1;
         } catch (KafkaConsumerException $e) {
-            $this->consumeManager = null;
-            $this->error('Failed to start Consume Manager: ' . $e->getMessage() . '. Trying again in 30 seconds...');
-            sleep(30);
-            $this->startConsumer();
+            $this->error('Failed to start Consume Manager: ' . $e->getMessage());
+            return 1;
+        } catch (Exception $e) {
+            $this->error('Unknown error occurred: ' . $e->getMessage());
+            return 1;
         }
     }
 

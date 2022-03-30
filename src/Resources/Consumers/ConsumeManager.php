@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Junges\Kafka\Consumers\Consumer as KafkaConsumer;
 use Junges\Kafka\Contracts\KafkaConsumerMessage;
 use Junges\Kafka\Facades\Kafka;
+use OnSecurity\Kafkavel\Exceptions\ConsumerManagerStartException;
 
 class ConsumeManager
 {
@@ -25,7 +26,7 @@ class ConsumeManager
         $this->consumerMap = new ConsumerMap;
         $this->topics = $this->consumerMap->getTopics()->filter(fn($topic) => $topicFilter === null || in_array($topic, $topicFilter, true))->toArray();
         if (empty($this->topics)) {
-            throw new \Exception('Unable to create ' . static::class . ' no valid topics');
+            throw new ConsumerManagerStartException('Unable to create ' . static::class . ' no valid topics');
         }
         $this->createConsumer();
     }
