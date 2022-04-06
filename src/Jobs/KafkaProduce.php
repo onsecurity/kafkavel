@@ -24,6 +24,9 @@ class KafkaProduce implements ShouldQueue
     {
         Kafka::publishOn($this->topic)
             ->withMessage($this->message)
+            ->withConfigOptions([
+                'security.protocol' => config('kafka.security.protocol'),
+            ])
             ->send();
     }
 }

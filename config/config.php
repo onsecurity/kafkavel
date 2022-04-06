@@ -30,4 +30,7 @@ return [
         'enabled' => false,
         'directories' => ['app/Resources/Kafka/Consumers']
     ],
+    'security' => [
+        'protocol' => env('KAFKAVEL_SECURITY_PROTOCOL', 'plaintext')
+    ]
 ];
