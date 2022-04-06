@@ -73,7 +73,7 @@ class ConsumeManager
         $this->consumer = Kafka::createConsumer($this->topics)
             ->withConsumerGroupId(config('kafka.consumer_group_id'))
             ->withHandler(fn(KafkaConsumerMessage $message) => $this->handleMessage($message))
-            ->withOptions(['security.protocol' => config('kafka.security.protocol')])
+            ->withOptions(['security.protocol' => config('kafkavel.security.protocol')])
             ->build();
     }
 
