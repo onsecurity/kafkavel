@@ -3,6 +3,8 @@
 return [
     'enabled' => true,
 
+    'debug' => env('KAFKAVEL_DEBUG', false),
+
     // producers are classes that implement \OnSecurity\Kafkavel\Resources\Contracts\KafkavelProducer.
     // They can be manually defined here or auto-discovery can be used by setting producer_discovery.enabled to true below
     'producers' => [
