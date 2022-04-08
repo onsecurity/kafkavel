@@ -31,6 +31,9 @@ return [
         'directories' => ['app/Resources/Kafka/Consumers']
     ],
     'security' => [
+        'username' => env('KAFKAVEL_SECURITY_USERNAME'),
+        'password' => env('KAFKAVEL_SECURITY_PASSWORD'),
+        'mechanism' => env('KAFKAVEL_SECURITY_MECHANISM'),
         'protocol' => env('KAFKAVEL_SECURITY_PROTOCOL', 'plaintext')
     ]
 ];

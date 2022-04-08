@@ -4,6 +4,7 @@ namespace OnSecurity\Kafkavel\Resources\Consumers;
 
 use Closure;
 use Illuminate\Support\Collection;
+use Junges\Kafka\Config\Sasl;
 use Junges\Kafka\Consumers\Consumer as KafkaConsumer;
 use Junges\Kafka\Contracts\KafkaConsumerMessage;
 use Junges\Kafka\Facades\Kafka;
@@ -70,11 +71,22 @@ class ConsumeManager
 
     protected function createConsumer()
     {
-        $this->consumer = Kafka::createConsumer($this->topics)
+        $consumerBuilder = Kafka::createConsumer($this->topics)
             ->withConsumerGroupId(config('kafka.consumer_group_id'))
-            ->withHandler(fn(KafkaConsumerMessage $message) => $this->handleMessage($message))
-            ->withOptions(['security.protocol' => config('kafkavel.security.protocol')])
-            ->build();
+            ->withHandler(fn(KafkaConsumerMessage $message) => $this->handleMessage($message));
+
+        if (config('kafkavel.security.username') !== null && config('kafkavel.security.password') !== null && config('kafkavel.security.mechanism') !== null) {
+            $consumerBuilder->withSasl(new Sasl(
+                username: config('kafkavel.security.username'),
+                password: config('kafkavel.security.password'),
+                mechanisms: config('kafkavel.security.mechanism'),
+                securityProtocol: config('kafkavel.security.protocol')
+            ));
+        } else {
+            $consumerBuilder->withOptions(['security.protocol' => config('kafkavel.security.protocol')]);
+        }
+
+        $this->consumer = $consumerBuilder->build();
     }
 
     protected function handleMessage(KafkaConsumerMessage $message): array
