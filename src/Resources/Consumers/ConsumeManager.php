@@ -73,7 +73,8 @@ class ConsumeManager
     {
         $consumerBuilder = Kafka::createConsumer($this->topics)
             ->withConsumerGroupId(config('kafka.consumer_group_id'))
-            ->withHandler(fn(KafkaConsumerMessage $message) => $this->handleMessage($message));
+            ->withHandler(fn(KafkaConsumerMessage $message) => $this->handleMessage($message))
+            ->withOptions(['security.protocol' => config('kafkavel.security.protocol')]);
 
         if (config('kafkavel.security.username') !== null && config('kafkavel.security.password') !== null && config('kafkavel.security.mechanism') !== null) {
             $consumerBuilder->withSasl(new Sasl(
@@ -82,8 +83,6 @@ class ConsumeManager
                 mechanisms: config('kafkavel.security.mechanism'),
                 securityProtocol: config('kafkavel.security.protocol')
             ));
-        } else {
-            $consumerBuilder->withOptions(['security.protocol' => config('kafkavel.security.protocol')]);
         }
 
         $this->consumer = $consumerBuilder->build();
