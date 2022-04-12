@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Unit\Resources\KafkavelPackage;
+namespace OnSecurity\Kafkavel\Tests\Feature;
 
 use OnSecurity\Kafkavel\Tests\Support\TestProducer;
 use OnSecurity\Kafkavel\Tests\Support\TestProducerEvent;
 use OnSecurity\Kafkavel\Tests\TestCase;
 
-class ProducerTest extends TestCase
+class KafkavelProducerTest extends TestCase
 {
 
     /** @test */
