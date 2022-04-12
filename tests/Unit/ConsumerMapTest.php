@@ -3,12 +3,18 @@
 namespace Tests\Unit\Resources\KafkavelPackage;
 
 use OnSecurity\Kafkavel\Resources\Consumers\ConsumerMap;
+use OnSecurity\Kafkavel\Resources\Topic\Rewriter;
 use OnSecurity\Kafkavel\Tests\Support\TestConsumer;
 use OnSecurity\Kafkavel\Tests\Support\TestConsumer2;
 use Orchestra\Testbench\TestCase;
 
 class ConsumerMapTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Rewriter::clearRewriteMapCache();
+    }
     /** @test */
     public function a_consumer_map_can_be_created()
     {

@@ -2,7 +2,9 @@
 
 namespace OnSecurity\Kafkavel\Resources\Topic;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Collection;
+use ReflectionException;
 
 class Rewriter
 {
@@ -15,17 +17,21 @@ class Rewriter
 
     public static function getRewriteMap(bool $reloadCache = false): array
     {
-        if ((self::$rewriteMapCache === null || $reloadCache) && strlen(config('kafkavel.topic_rewrite'))) {
-            $rewriteConfig = array_map('trim',  explode(',', config('kafkavel.topic_rewrite')));
-            $rewriteConfigItems = array_map(fn($item) => array_map('trim', explode('->', $item)), $rewriteConfig);
-            foreach ($rewriteConfigItems as $rewriteConfigItem) {
-                if (count($rewriteConfigItem) !== 2) {
-                    throw new \Exception('Invalid rewrite config item, expected length of 2, got ' . count($rewriteConfigItem) . ' (' . json_encode($rewriteConfigItem) . ')');
+        try {
+            if ((self::$rewriteMapCache === null || $reloadCache) && strlen(config('kafkavel.topic_rewrite'))) {
+                $rewriteConfig = array_map('trim',  explode(',', config('kafkavel.topic_rewrite')));
+                $rewriteConfigItems = array_map(fn($item) => array_map('trim', explode('->', $item)), $rewriteConfig);
+                foreach ($rewriteConfigItems as $rewriteConfigItem) {
+                    if (count($rewriteConfigItem) !== 2) {
+                        throw new \Exception('Invalid rewrite config item, expected length of 2, got ' . count($rewriteConfigItem) . ' (' . json_encode($rewriteConfigItem) . ')');
+                    }
+                    self::$rewriteMapCache[$rewriteConfigItem[0]] = $rewriteConfigItem[1];
                 }
-                self::$rewriteMapCache[$rewriteConfigItem[0]] = $rewriteConfigItem[1];
             }
+            return self::$rewriteMapCache ?? [];
+        } catch (ReflectionException | BindingResolutionException $exception) { // happens in tests when unit testing producers
+            return [];
         }
-        return self::$rewriteMapCache ?? [];
     }
 
     public static function collectionMap(Collection $topics, $reloadCache = false): Collection
