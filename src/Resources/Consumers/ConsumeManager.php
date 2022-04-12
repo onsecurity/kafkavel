@@ -26,8 +26,9 @@ class ConsumeManager
     public function __construct(?array $topicFilter = null)
     {
         $this->consumerMap = new ConsumerMap;
+        $rewrittenTopicFilter = Rewriter::arrayMap($topicFilter);
         $this->topics = Rewriter::collectionMap($this->consumerMap->getTopics())
-            ->filter(fn($topic) => $topicFilter === null || in_array($topic, $topicFilter, true))
+            ->filter(fn($topic) => $topicFilter === null || in_array($topic, $rewrittenTopicFilter, true))
             ->toArray();
         if (empty($this->topics)) {
             throw new ConsumerManagerStartException('Unable to create ' . static::class . ' no valid topics');
