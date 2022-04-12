@@ -4,6 +4,7 @@ namespace OnSecurity\Kafkavel\Resources\Consumers;
 
 use Illuminate\Support\Collection;
 use OnSecurity\Kafkavel\Resources\Discovery\ConsumerDiscover;
+use OnSecurity\Kafkavel\Resources\Topic\Rewriter;
 
 class ConsumerMap
 {
@@ -18,7 +19,7 @@ class ConsumerMap
 
     public function getTopics(): Collection
     {
-        return $this->consumerClasses->map(fn($consumerClass) => $consumerClass::getTopic())->uniqueStrict()->values();
+        return $this->consumerClasses->map(fn($consumerClass) => Rewriter::map($consumerClass::getTopic()))->uniqueStrict()->values();
     }
 
     public function getTopicSchemaMap(): array
@@ -29,7 +30,7 @@ class ConsumerMap
     protected function consumersToTopicSchemaMap(Collection $consumers): array
     {
         return collect($consumers)
-            ->groupBy(fn($consumerClass) => $consumerClass::getTopic())
+            ->groupBy(fn($consumerClass) => Rewriter::map($consumerClass::getTopic()))
             ->map(fn($consumerClasses) =>
             $consumerClasses->mapWithKeys(fn($consumerClass) => [
                 $consumerClass => [

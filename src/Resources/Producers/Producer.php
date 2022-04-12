@@ -6,6 +6,7 @@ use Junges\Kafka\Message\Message;
 use OnSecurity\Kafkavel\Resources\Aggregate\DtoAssembler;
 use OnSecurity\Kafkavel\Jobs\KafkaProduce;
 use OnSecurity\Kafkavel\Resources\Contracts\KafkavelProducer;
+use OnSecurity\Kafkavel\Resources\Topic\Rewriter;
 
 abstract class Producer implements KafkavelProducer
 {
@@ -28,12 +29,12 @@ abstract class Producer implements KafkavelProducer
 
     final public function produce(): void
     {
-        dispatch(new KafkaProduce(static::getTopic(), $this->getMessage()))->onQueue(config('kafkavel.producer_queue'));
+        dispatch(new KafkaProduce(Rewriter::map(static::getTopic()), $this->getMessage()))->onQueue(config('kafkavel.producer_queue'));
     }
 
     public function getMessage() {
         return new Message(
-            topicName: $this->getTopic(),
+            topicName: Rewriter::map($this->getTopic()),
             headers: array_merge($this->headers, ['schema' => static::getSchema(), 'schemaVersion' => static::getSchemaVersion()]),
             body: $this->getAssembler()->toArray()
         );

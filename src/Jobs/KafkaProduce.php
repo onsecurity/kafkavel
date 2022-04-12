@@ -25,7 +25,7 @@ class KafkaProduce implements ShouldQueue
     {
         $messageProducer = Kafka::publishOn($this->topic)
             ->withMessage($this->message)
-            ->withDebugEnabled(config('kafkavel.debug'));
+            ->withDebugEnabled(config('kafkavel.debug') ?? false);
 
         if (config('kafkavel.security.username') !== null && config('kafkavel.security.password') !== null && config('kafkavel.security.mechanism') !== null) {
             $messageProducer->withSasl(new Sasl(

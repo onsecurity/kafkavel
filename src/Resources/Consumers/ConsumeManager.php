@@ -9,6 +9,7 @@ use Junges\Kafka\Consumers\Consumer as KafkaConsumer;
 use Junges\Kafka\Contracts\KafkaConsumerMessage;
 use Junges\Kafka\Facades\Kafka;
 use OnSecurity\Kafkavel\Exceptions\ConsumerManagerStartException;
+use OnSecurity\Kafkavel\Resources\Topic\Rewriter;
 
 class ConsumeManager
 {
@@ -25,7 +26,9 @@ class ConsumeManager
     public function __construct(?array $topicFilter = null)
     {
         $this->consumerMap = new ConsumerMap;
-        $this->topics = $this->consumerMap->getTopics()->filter(fn($topic) => $topicFilter === null || in_array($topic, $topicFilter, true))->toArray();
+        $this->topics = Rewriter::collectionMap($this->consumerMap->getTopics())
+            ->filter(fn($topic) => $topicFilter === null || in_array($topic, $topicFilter, true))
+            ->toArray();
         if (empty($this->topics)) {
             throw new ConsumerManagerStartException('Unable to create ' . static::class . ' no valid topics');
         }

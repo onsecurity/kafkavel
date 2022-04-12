@@ -32,6 +32,9 @@ return [
         'enabled' => false,
         'directories' => ['app/Resources/Kafka/Consumers']
     ],
+
+    'topic_rewrite' => env('KAFKAVEL_TOPIC_REWRITE', ''),
+
     'security' => [
         'username' => env('KAFKAVEL_SECURITY_USERNAME'),
         'password' => env('KAFKAVEL_SECURITY_PASSWORD'),

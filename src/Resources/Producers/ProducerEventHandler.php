@@ -19,7 +19,11 @@ final class ProducerEventHandler
     public function handle(): void
     {
         if ($this->producers->isNotEmpty() && config('kafkavel.enabled')) {
-            $this->producers->each(fn($producer) => $producer->shouldProduce() ? $producer->produce() : null);
+            foreach ($this->producers as $producer) {
+                if ($producer->shouldProduce()) {
+                    $producer->produce();
+                }
+            }
         }
     }
 
