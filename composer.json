@@ -4,7 +4,7 @@
     "require": {
         "ext-pcntl": "*",
         "mateusjunges/laravel-kafka": "^1",
-        "laravel/framework": "^6.0|^7.0|^8.0"
+        "laravel/framework": "^6.0|^7.0|^8.0|^9.0"
     },
     "license": "GNU GPLv3",
     "autoload": {
