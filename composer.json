@@ -3,8 +3,8 @@
     "type": "library",
     "require": {
         "ext-pcntl": "*",
-        "mateusjunges/laravel-kafka": "^1",
-        "laravel/framework": "^6.0|^7.0|^8.0|^9.0"
+        "mateusjunges/laravel-kafka": "1.13.4",
+        "laravel/framework": "^8.0|^9.0|^10"
     },
     "license": "GNU GPLv3",
     "autoload": {
@@ -33,6 +33,6 @@
     "require-dev": {
         "mockery/mockery": "^1.4",
         "phpunit/phpunit": "~9.5",
-        "orchestra/testbench": "^6|^7|^8"
+        "orchestra/testbench": "^8|^9|^10"
     }
 }

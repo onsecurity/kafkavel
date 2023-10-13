@@ -44,7 +44,7 @@ class ConsumeManager
 
     public function stop(?Closure $onStop = null): void
     {
-        $this->consumer->stopConsume($onStop);
+        $this->consumer->stopConsuming($onStop);
     }
 
     public function getTopics(): array
