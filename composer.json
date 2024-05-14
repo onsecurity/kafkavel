@@ -3,7 +3,7 @@
     "type": "library",
     "require": {
         "ext-pcntl": "*",
-        "mateusjunges/laravel-kafka": "1.13.4",
+        "mateusjunges/laravel-kafka": "1.13.2",
         "laravel/framework": "^8.0|^9.0|^10"
     },
     "license": "GNU GPLv3",
