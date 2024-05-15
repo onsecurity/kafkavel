@@ -65,11 +65,7 @@ class KafkavelConsume extends Command
     private function startConsumer(): int
     {
         try {
-            $topicFilter = $this->option('topic');
-            $this->consumeManager = new ConsumeManager(empty($topicFilter) ? null : $topicFilter);
-            if ($this->debug) {
-                $this->info('Subscribing to topics: ' . implode(', ', $this->consumeManager->getTopics()));
-            }
+            $this->consumeManager = $this->createConsumeManager();
             $this->consumeManager->start();
             return 0;
         } catch (ConsumerManagerStartException $e) {
@@ -84,12 +80,13 @@ class KafkavelConsume extends Command
         }
     }
 
-    private function createConsumeManager(): void
+    private function createConsumeManager(): ConsumeManager
     {
-        $this->consumeManager = new ConsumeManager;
+        $topicFilter = $this->option('topic');
+        $consumeManager = new ConsumeManager(empty($topicFilter) ? null : $topicFilter);
         if ($this->debug) {
-            $this->consumeManager->beforeHandle(function(ConsumerMessage $consumerMessage, array $handlerClasses) {
-                echo "Test\n";
+            $this->info('Subscribing to topics: ' . implode(', ', $consumeManager->getTopics()));
+            $consumeManager->beforeHandle(function(ConsumerMessage $consumerMessage, array $handlerClasses) {
                 Log::debug('----------');
                 Log::debug(sprintf(
                     '%s -> %s:%s -> %s',
@@ -103,10 +100,12 @@ class KafkavelConsume extends Command
                 return true;
             });
 
-            $this->consumeManager->afterHandle(function(ConsumerMessage $consumerMessage, array $handlerClasses, array $results) {
+            $consumeManager->afterHandle(function(ConsumerMessage $consumerMessage, array $handlerClasses, array $results) {
                 Log::debug(json_encode($results));
             });
         }
+
+        return $consumeManager;
     }
 
     private function handleSigInt()
