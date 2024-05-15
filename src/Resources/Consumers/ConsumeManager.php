@@ -70,7 +70,7 @@ class ConsumeManager
 
     public function afterHandle(?Closure $closure): self
     {
-        $this->beforeHandle = $closure;
+        $this->afterHandle = $closure;
         return $this;
     }
 
