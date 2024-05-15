@@ -50,6 +50,7 @@ class KafkavelConsume extends Command
         pcntl_async_signals(true);
         pcntl_signal(SIGINT, fn() => $this->handleSigInt());
         pcntl_signal(SIGTERM, fn() => $this->handleSigInt());
+        pcntl_signal(SIGQUIT, fn() => $this->handleSigInt());
 
         $this->debug = $this->option('debug');
 
