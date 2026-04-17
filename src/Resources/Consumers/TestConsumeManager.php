@@ -3,7 +3,7 @@
 namespace OnSecurity\Kafkavel\Resources\Consumers;
 
 use Closure;
-use Junges\Kafka\Contracts\KafkaConsumerMessage;
+use Junges\Kafka\Contracts\ConsumerMessage as JungesConsumerMessage;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 class TestConsumeManager extends ConsumeManager
@@ -50,7 +50,7 @@ class TestConsumeManager extends ConsumeManager
         );
     }
 
-    public function attemptHandleMessage(KafkaConsumerMessage $message): array
+    public function attemptHandleMessage(JungesConsumerMessage $message): array
     {
         if (!$this->started) {
             throw new \Exception('Unable to handle message, consume manager is not started.');

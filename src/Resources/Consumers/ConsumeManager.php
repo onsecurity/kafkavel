@@ -4,16 +4,15 @@ namespace OnSecurity\Kafkavel\Resources\Consumers;
 
 use Closure;
 use Illuminate\Support\Collection;
-use Junges\Kafka\Config\Sasl;
-use Junges\Kafka\Consumers\Consumer as KafkaConsumer;
-use Junges\Kafka\Contracts\KafkaConsumerMessage;
+use Junges\Kafka\Contracts\ConsumerMessage as JungesConsumerMessage;
+use Junges\Kafka\Contracts\MessageConsumer;
 use Junges\Kafka\Facades\Kafka;
 use OnSecurity\Kafkavel\Exceptions\ConsumerManagerStartException;
 use OnSecurity\Kafkavel\Resources\Topic\Rewriter;
 
 class ConsumeManager
 {
-    protected KafkaConsumer $consumer;
+    protected MessageConsumer $consumer;
 
     protected Collection $consumerClasses;
     protected ConsumerMap $consumerMap;
@@ -44,7 +43,10 @@ class ConsumeManager
 
     public function stop(?Closure $onStop = null): void
     {
-        $this->consumer->stopConsuming($onStop);
+        $this->consumer->stopConsuming();
+        if ($onStop !== null) {
+            $onStop();
+        }
     }
 
     public function getTopics(): array
@@ -76,24 +78,24 @@ class ConsumeManager
 
     protected function createConsumer()
     {
-        $consumerBuilder = Kafka::createConsumer($this->topics)
+        $consumerBuilder = Kafka::consumer($this->topics)
             ->withConsumerGroupId(config('kafka.consumer_group_id'))
-            ->withHandler(fn(KafkaConsumerMessage $message) => $this->handleMessage($message))
+            ->withHandler(fn(JungesConsumerMessage $message) => $this->handleMessage($message))
             ->withSecurityProtocol(config('kafkavel.security.protocol'));
 
         if (config('kafkavel.security.username') !== null && config('kafkavel.security.password') !== null && config('kafkavel.security.mechanism') !== null) {
-            $consumerBuilder->withSasl(new Sasl(
+            $consumerBuilder->withSasl(
                 username: config('kafkavel.security.username'),
                 password: config('kafkavel.security.password'),
                 mechanisms: config('kafkavel.security.mechanism'),
                 securityProtocol: config('kafkavel.security.protocol')
-            ));
+            );
         }
 
         $this->consumer = $consumerBuilder->build();
     }
 
-    protected function handleMessage(KafkaConsumerMessage $message): array
+    protected function handleMessage(JungesConsumerMessage $message): array
     {
         $consumerMessage = ConsumerMessage::makeFromKafkaConsumerMessage($message);
         $handlerClasses = $this->consumerMap->getTopicSchemaMap()[$message->getTopicName()][$consumerMessage->getSchema()][$consumerMessage->getSchemaVersion()] ?? [];
