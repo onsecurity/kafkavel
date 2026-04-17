@@ -2,9 +2,9 @@
 
 namespace OnSecurity\Kafkavel\Resources\Contracts;
 
-use Junges\Kafka\Contracts\KafkaConsumerMessage;
+use Junges\Kafka\Contracts\ConsumerMessage as JungesConsumerMessage;
 
-interface KafkavelConsumerMessage extends KafkaConsumerMessage
+interface KafkavelConsumerMessage extends JungesConsumerMessage
 {
     public function getSchema(): ?string;
 
