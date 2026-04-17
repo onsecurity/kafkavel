@@ -11,6 +11,8 @@ use Junges\Kafka\Config\Sasl;
 use Junges\Kafka\Contracts\KafkaProducerMessage;
 use Junges\Kafka\Facades\Kafka;
 use Junges\Kafka\Message\Message;
+use OnSecurity\Kafkavel\Auth\MskIamTokenProvider;
+use OnSecurity\Kafkavel\Auth\OAuthBearerCallbackSetter;
 
 class KafkaProduce implements ShouldQueue
 {
@@ -27,11 +29,20 @@ class KafkaProduce implements ShouldQueue
             ->withMessage($this->message)
             ->withDebugEnabled(config('kafkavel.debug') ?? false);
 
-        if (config('kafkavel.security.username') !== null && config('kafkavel.security.password') !== null && config('kafkavel.security.mechanism') !== null) {
+        $mechanism = config('kafkavel.security.mechanism');
+
+        if ($mechanism === 'AWS_MSK_IAM') {
+            $provider = new MskIamTokenProvider(config('kafkavel.security.aws_region', 'eu-west-2'));
+            $messageProducer->withConfigOptions([
+                'security.protocol' => config('kafkavel.security.protocol', 'SASL_SSL'),
+                'sasl.mechanisms' => 'OAUTHBEARER',
+            ]);
+            OAuthBearerCallbackSetter::set($messageProducer, $provider->getRefreshCallback());
+        } elseif (config('kafkavel.security.username') !== null && config('kafkavel.security.password') !== null && $mechanism !== null) {
             $messageProducer->withSasl(new Sasl(
                 username: config('kafkavel.security.username'),
                 password: config('kafkavel.security.password'),
-                mechanisms: config('kafkavel.security.mechanism'),
+                mechanisms: $mechanism,
                 securityProtocol: config('kafkavel.security.protocol')
             ));
         } else {

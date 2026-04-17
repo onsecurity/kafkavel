@@ -8,6 +8,8 @@ use Junges\Kafka\Config\Sasl;
 use Junges\Kafka\Consumers\Consumer as KafkaConsumer;
 use Junges\Kafka\Contracts\KafkaConsumerMessage;
 use Junges\Kafka\Facades\Kafka;
+use OnSecurity\Kafkavel\Auth\MskIamTokenProvider;
+use OnSecurity\Kafkavel\Auth\OAuthBearerCallbackSetter;
 use OnSecurity\Kafkavel\Exceptions\ConsumerManagerStartException;
 use OnSecurity\Kafkavel\Resources\Topic\Rewriter;
 
@@ -81,11 +83,19 @@ class ConsumeManager
             ->withHandler(fn(KafkaConsumerMessage $message) => $this->handleMessage($message))
             ->withSecurityProtocol(config('kafkavel.security.protocol'));
 
-        if (config('kafkavel.security.username') !== null && config('kafkavel.security.password') !== null && config('kafkavel.security.mechanism') !== null) {
+        $mechanism = config('kafkavel.security.mechanism');
+
+        if ($mechanism === 'AWS_MSK_IAM') {
+            $provider = new MskIamTokenProvider(config('kafkavel.security.aws_region', 'eu-west-2'));
+            $consumerBuilder->withOptions([
+                'sasl.mechanisms' => 'OAUTHBEARER',
+            ]);
+            OAuthBearerCallbackSetter::set($consumerBuilder, $provider->getRefreshCallback());
+        } elseif (config('kafkavel.security.username') !== null && config('kafkavel.security.password') !== null && $mechanism !== null) {
             $consumerBuilder->withSasl(new Sasl(
                 username: config('kafkavel.security.username'),
                 password: config('kafkavel.security.password'),
-                mechanisms: config('kafkavel.security.mechanism'),
+                mechanisms: $mechanism,
                 securityProtocol: config('kafkavel.security.protocol')
             ));
         }
