@@ -88,6 +88,7 @@ class ConsumeManager
         if ($mechanism === 'AWS_MSK_IAM') {
             $provider = new MskIamTokenProvider(config('kafkavel.security.aws_region', 'eu-west-2'));
             $consumerBuilder->withOptions([
+                'security.protocol' => config('kafkavel.security.protocol', 'SASL_SSL'),
                 'sasl.mechanisms' => 'OAUTHBEARER',
             ]);
             OAuthBearerCallbackSetter::set($consumerBuilder, $provider->getRefreshCallback());
