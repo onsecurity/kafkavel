@@ -5,7 +5,7 @@ namespace OnSecurity\Kafkavel\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use Junges\Kafka\Exceptions\KafkaConsumerException;
+use Junges\Kafka\Exceptions\ConsumerException;
 use OnSecurity\Kafkavel\Exceptions\ConsumerManagerStartException;
 use OnSecurity\Kafkavel\Resources\Consumers\ConsumeManager;
 use OnSecurity\Kafkavel\Resources\Consumers\ConsumerMessage;
@@ -72,7 +72,7 @@ class KafkavelConsume extends Command
         } catch (ConsumerManagerStartException $e) {
             $this->error('Failed to start Consume Manager: ' . $e->getMessage());
             return 1;
-        } catch (KafkaConsumerException $e) {
+        } catch (ConsumerException $e) {
             $this->error('Failed to start Consume Manager: ' . $e->getMessage());
             return 1;
         } catch (Exception $e) {

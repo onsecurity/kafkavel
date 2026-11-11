@@ -2,13 +2,13 @@
 
 namespace OnSecurity\Kafkavel\Resources\Consumers;
 
-use Junges\Kafka\Contracts\KafkaConsumerMessage;
+use Junges\Kafka\Contracts\ConsumerMessage as JungesConsumerMessage;
 use Junges\Kafka\Message\ConsumedMessage;
 use OnSecurity\Kafkavel\Resources\Contracts\KafkavelConsumerMessage;
 
 class ConsumerMessage extends ConsumedMessage implements KafkavelConsumerMessage
 {
-    public static function makeFromKafkaConsumerMessage(KafkaConsumerMessage $message): static
+    public static function makeFromKafkaConsumerMessage(JungesConsumerMessage $message): static
     {
         return new static(
             topicName: $message->getTopicName(),
