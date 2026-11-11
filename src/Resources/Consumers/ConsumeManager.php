@@ -7,6 +7,8 @@ use Illuminate\Support\Collection;
 use Junges\Kafka\Contracts\ConsumerMessage as JungesConsumerMessage;
 use Junges\Kafka\Contracts\MessageConsumer;
 use Junges\Kafka\Facades\Kafka;
+use OnSecurity\Kafkavel\Auth\MskIamTokenProvider;
+use OnSecurity\Kafkavel\Auth\OAuthBearerCallbackSetter;
 use OnSecurity\Kafkavel\Exceptions\ConsumerManagerStartException;
 use OnSecurity\Kafkavel\Resources\Topic\Rewriter;
 
@@ -83,11 +85,20 @@ class ConsumeManager
             ->withHandler(fn(JungesConsumerMessage $message) => $this->handleMessage($message))
             ->withSecurityProtocol(config('kafkavel.security.protocol'));
 
-        if (config('kafkavel.security.username') !== null && config('kafkavel.security.password') !== null && config('kafkavel.security.mechanism') !== null) {
+        $mechanism = config('kafkavel.security.mechanism');
+
+        if ($mechanism === 'AWS_MSK_IAM') {
+            $provider = new MskIamTokenProvider(config('kafkavel.security.aws_region', 'eu-west-2'));
+            $consumerBuilder->withOptions([
+                'security.protocol' => config('kafkavel.security.protocol', 'SASL_SSL'),
+                'sasl.mechanisms' => 'OAUTHBEARER',
+            ]);
+            OAuthBearerCallbackSetter::set($consumerBuilder, $provider->getRefreshCallback());
+        } elseif (config('kafkavel.security.username') !== null && config('kafkavel.security.password') !== null && $mechanism !== null) {
             $consumerBuilder->withSasl(
                 username: config('kafkavel.security.username'),
                 password: config('kafkavel.security.password'),
-                mechanisms: config('kafkavel.security.mechanism'),
+                mechanisms: $mechanism,
                 securityProtocol: config('kafkavel.security.protocol')
             );
         }
